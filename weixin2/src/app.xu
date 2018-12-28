@@ -1,14 +1,11 @@
 
 <style>
-@import './font/css/home.wxss';
 </style>
 <script>
 // import wepy from 'wepy'
 // import 'wepy-async-function'
 import wepy from 'wexp/index'
 // import * as resource from './mixins/resource'
-import {login} from './mixins/login.js'
-
 export default class extends wepy.app {
   config = {
     'pages': [
@@ -57,12 +54,8 @@ export default class extends wepy.app {
       env: 'test-ba4566'
     })
     wx.authorize({
-      scope: 'scope.record'
-    })
-    wx.authorize({
       scope: 'scope.userInfo'
     })
-    login()
   }
 }
 </script>
