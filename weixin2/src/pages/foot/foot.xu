@@ -7,7 +7,7 @@
           <swiper-item>
             <view class="cover-module">
 
-              <image  mode="aspectFill" class="cover" src="https://5b0988e595225.cdn.sohucs.com/images/20180428/ef486d72e6f4426b8afe0a6b53dd078a.jpg" alt=""></image>
+              <image  mode="aspectFill" class="cover" src="http://images.kaishiba.com/whhfoot.jpeg" alt=""></image>
               <view class="cover-module" wx:if="{{stepTodyList.length > 0}}">
                 <view class="gunjun-title">今日冠军</view>
                 <view class="gunjun-info">
@@ -22,7 +22,7 @@
           <swiper-item>
             <view class="cover-module">
 
-              <image  mode="aspectFill" class="cover" src="https://5b0988e595225.cdn.sohucs.com/images/20180428/ef486d72e6f4426b8afe0a6b53dd078a.jpg" alt=""></image>
+              <image  mode="aspectFill" class="cover" src="http://images.kaishiba.com/whhfoot.jpeg" alt=""></image>
               <view class="cover-module" wx:if="{{groupHistoryList.length > 0}}">
                 <view class="gunjun-title">小组冠军</view>
                 <view class="gunjun-info">
@@ -41,7 +41,7 @@
           <swiper-item>
             <view class="cover-module">
 
-              <image  mode="aspectFill" class="cover" src="https://5b0988e595225.cdn.sohucs.com/images/20180428/ef486d72e6f4426b8afe0a6b53dd078a.jpg" alt=""></image>
+              <image  mode="aspectFill" class="cover" src="http://images.kaishiba.com/whhfoot.jpeg" alt=""></image>
               <view class="cover-module" wx:if="{{stepHistoryList.length > 0}}">
                 <view class="gunjun-title">总冠军</view>
                 <view class="gunjun-info">
@@ -504,7 +504,7 @@
   const _ = db.command
   export default class extends wexp.page {
     config = {
-      "navigationBarTitleText": "哇哈哈健康跑",
+      "navigationBarTitleText": "娃哈哈21天健步行",
       "backgroundTextStyle": "#333",
       "backgroundColor": "#F4F4F4",
       "onReachBottomDistance": 50,
@@ -612,13 +612,13 @@
         return {
           title: '哇哈哈健康跑邀请你加入',
           path: '/pages/foot/foot',
-          imageUrl: 'https://5b0988e595225.cdn.sohucs.com/images/20180428/ef486d72e6f4426b8afe0a6b53dd078a.jpg'
+          imageUrl: 'http://images.kaishiba.com/whhfoot.jpeg'
         }
       } else {
         return {
           title: this.data.userInfo.nickName + '邀请你组队',
           path: '/pages/foot/foot?id=' + this.data.myGroup.mygroup._id,
-          imageUrl: 'https://5b0988e595225.cdn.sohucs.com/images/20180428/ef486d72e6f4426b8afe0a6b53dd078a.jpg'
+          imageUrl: 'http://images.kaishiba.com/whhfoot.jpeg'
         }
       }
     }
