@@ -326,7 +326,7 @@
       width: 50px;
       height: 50px;
       border-radius: 50%;
-      box-shadow: 0 2px 2px 2px rgba(255, 255, 255, 0.5);
+      box-shadow: 0 1px 1px 1px rgba(255, 255, 255, 0.5);
       image {
         width: 50px;
         height: 50px;
@@ -516,6 +516,7 @@
         position: 'center',
         maskHide: false
       },
+      groupId: '',
       isBindWx: false,
       show: false,
       groupName: '',
@@ -612,17 +613,17 @@
       } else {
         return {
           title: this.data.userInfo.nickName + '邀请你组队',
-          path: '/pages/foot/foot?id=' + this.data.myGroup.mygroup.id,
+          path: '/pages/foot/foot?id=' + this.data.myGroup.mygroup._id,
           imageUrl: 'https://5b0988e595225.cdn.sohucs.com/images/20180428/ef486d72e6f4426b8afe0a6b53dd078a.jpg'
         }
       }
     }
     isTody (d) {
      var td = new Date()
-     td = new Date(td.getFullYear(),td.getMonth(),td.getDate())
+     td = new Date(td.getFullYear(),td.getMonth(),td.getDate(), 0, 0, 0).getTime()
      var od = new Date(d)
-     od = new Date(od.getFullYear(),od.getMonth(),od.getDate())
-     var xc = (od-td) / 1000 / 60 / 60 / 24
+     od = new Date(od.getFullYear(),od.getMonth(),od.getDate(), 0, 0 , 0).getTime()
+     var xc = od - td
      return xc
     }
     getUsers () {
@@ -654,7 +655,7 @@
       wx.cloud.callFunction({
         name: 'updateStep',
         data: {
-          step: 100,
+          step: step,
           time: time
         },
         complete: res => {
@@ -863,6 +864,9 @@
         },
         success: res => {
           let tip = ''
+          that.setData({
+            groupId: ''
+          })
           if (res.errorMsg === 1) {
             tip = '你已加入该小组'
           } else if (res.errorMsg === 0) {
@@ -938,18 +942,24 @@
               let todyStep = 0
               let todyTime = new Date()
               let today = new Date(todyTime.getFullYear(), todyTime.getMonth(), todyTime.getDate()).getTime()
-              for (let item of stepList) {
-                let isTody = that.isTody(item.timestamp)
-                let d = new Date(item.timestamp)
+              for (var i = stepList.length; i--; i <= 0) {
+                let item = stepList[i]
+                console.log(i)
+                let isTody = that.isTody(item.timestamp * 1000)
+                let d = new Date(item.timestamp * 1000)
                 item.timestr = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
                 if (isTody === 0) {
                   todyStep = item.step
+                  break
                 }
               }
               that.upateStep(todyStep, today)
               that.setData({
                 list: stepList
               })
+              // wx.showModal({
+              //   content: JSON.stringify(stepList)
+              // })
               console.log(stepList)
             }
           })
@@ -967,8 +977,10 @@
     init () {
       let that = this
       let usr = this.data.userInfo
-      const pageInfo = wx.getLaunchOptionsSync()
-      const groupId = pageInfo.query.id
+      const groupId = this.data.groupId
+      // wx.showModal({
+      //   content: JSON.stringify(pageInfo)
+      // })
       db.collection('user').where({
         openId: usr.openId
       }).get().then(res => {
@@ -979,6 +991,7 @@
           this.$route('redirect', './login', {})
           return
         }
+        that.updateUser()
         that.setData({
           isBindWx: true
         })
@@ -988,9 +1001,21 @@
         that.refresh()
       })
     }
+    updateUser () {
+      wx.cloud.callFunction({
+        name: 'updateUser',
+        data: {
+          nick: this.data.userInfo.nickName,
+          img: this.data.userInfo.avatarUrl
+        }
+      })
+    }
     onLoad (opt) {
       const that = this
       Toast.init('toast')
+      this.setData({
+        groupId: opt.id
+      })
       wx.showShareMenu({
         withShareTicket: true,
         success: res => {

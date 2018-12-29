@@ -11,11 +11,21 @@ exports.main = async (event, context) => {
     const col = db.collection('group').where({
       _id: event.id
     })
+    let allGroup = await db.collection('group').get()
     const {OPENID} = cloud.getWXContext()
     let group =  await col.get()
     group = group.data
-    console.log(group)
-    console.log(OPENID)
+    allGroup = allGroup.data
+    console.log(allGroup)
+    for (let item of allGroup) {
+      console.log(item)
+      let itemIds = item.openIds
+      if (itemIds.indexOf(OPENID) > -1 && itemIds.length === 1) {
+        await db.collection('group').where({
+          _id: item._id
+        }).remove()
+      }
+    }
     if (group.length <= 0) {
       return await new Promise((resolve, reject) => {
         resolve({
