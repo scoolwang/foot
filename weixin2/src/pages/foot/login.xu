@@ -88,7 +88,7 @@
                 Toast.success({
                   content: '登录成功'
                 })
-                this.$route('navigate', './foot', {})
+                this.$route('redirect', './foot', {})
               },
               fail: res => {
                 Toast.error({

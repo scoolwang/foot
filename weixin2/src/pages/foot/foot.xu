@@ -27,7 +27,7 @@
                 <view class="gunjun-title">小组冠军</view>
                 <view class="gunjun-info">
                   <view class="gunjun-list">
-                    <view class="gunjun-img" wx:for="{{groupHistoryList[0].group.openIds}}">
+                    <view class="gunjun-img" wx:for="{{groupHistoryList[0].group.openIds}}" wx:key="index">
                       <image mode="aspectFill" src="{{userMap[item].img}}"></image>
                     </view>
                   </view>
@@ -85,7 +85,7 @@
             </view>
             <view class="step">{{stepTodyMap[userInfo.openId].step}}</view>
           </view>
-          <view wx:for="{{stepTodyList}}" class="step-info">
+          <view wx:for="{{stepTodyList}}" wx:key="index" class="step-info">
             <view class="sort">
               {{index +  1}}
             </view>
@@ -112,7 +112,7 @@
                 </view>
                 <view class="step">{{myGroup.step}}</view>
               </view>
-              <view class="step-info" wx:for="{{myGroup.mygroup.openIds}}">
+              <view class="step-info" wx:for="{{myGroup.mygroup.openIds}}" wx:key="index">
                 <view class="avatar-box">
                   <image class="avatar" mode="aspectFill" src="{{userMap[item].img}}"></image>
                 </view>
@@ -122,13 +122,13 @@
               <button open-type="share" wx:if="{{!myGroup.limit}}" class="share-button">+邀请好友组队</button>
             </view>
 
-            <view wx:for="{{groupHistoryList}}">
+            <view wx:for="{{groupHistoryList}}" wx:key="index">
               <view class="group-title">
                 <view class="sort">{{index + 1}}</view>
                 <view class="group-name">{{item.group.name}}</view>
                 <view class="step">{{item.step}}</view>
               </view>
-              <view class="step-info" wx:for="{{item.group.openIds}}">
+              <view class="step-info" wx:for="{{item.group.openIds}}" wx:key="index">
 
                 <!-- <view class="sort">
                   {{index +  1}}
@@ -146,7 +146,7 @@
           </view>
 
         </scroll-view>
-        <view class="create-button" bindtap="ctg" wx:if="{{!myGroup.hasGroup}}">创建小组</view>
+        <view class="create-button" bindtap="ctg" wx:if="{{!myGroup.hasGroup&&isBindWx}}">创建小组</view>
       </swiper-item>
     </block>
     <block>
@@ -163,7 +163,7 @@
             </view>
             <view class="step">{{stepHistoryObj[userInfo.openId].step}}</view>
           </view>
-          <view wx:for="{{stepHistoryList}}" class="step-info">
+          <view wx:for="{{stepHistoryList}}" wx:key="index" class="step-info">
             <view class="sort">
               {{index +  1}}
             </view>
@@ -180,7 +180,7 @@
   </view>
 </view>
   <toast id="toast" />
- <!-- <view><button open-type="getUserInfo">yong</button></view> -->
+ <button open-type="getUserInfo" wx:if="{{!isBindWx}}" class="bind-btn" bindgetuserinfo="getUserInfnoFn">参加</button>
   <view class="mask" wx:if="{{show}}">
     <view class="pop-content">
       <!-- <input type="text" placeholder="请输入小组名字" placeholder-style="color:#c9c9c9" name=""> -->
@@ -199,6 +199,20 @@
   </view>
 </template>
 <style lang="less">
+  .bind-btn {
+    position: fixed;
+    bottom: 100px;
+    z-index: 33;
+    right: 10px;
+    border-radius: 50%;
+    font-size: 10px;
+    background: #54A3FF;
+    color: #fff;
+    height: 50px;
+    width: 50px;
+    line-height: 50px;
+    box-shadow: 0 2px 3px 3px #fff;
+  }
   .page {
     height: 100%;
     display: flex;
@@ -486,7 +500,7 @@
   const _ = db.command
   export default class extends wexp.page {
     config = {
-      "navigationBarTitleText": "哇哈哈健康跑1",
+      "navigationBarTitleText": "哇哈哈健康跑",
       "backgroundTextStyle": "#333",
       "backgroundColor": "#F4F4F4",
       "onReachBottomDistance": 50,
@@ -502,6 +516,7 @@
         position: 'center',
         maskHide: false
       },
+      isBindWx: false,
       show: false,
       groupName: '',
       createLoading: false,
@@ -566,15 +581,39 @@
         })
       }
     }
+    getUserInfnoFn (res) {
+      let that = this
+      getUserInfo().then((usr) => {
+        this.setData({
+          userInfo: usr
+        })
+        console.log('获取用户信息', usr)
+        that.init()
+      }, (res) => {
+        Toast.error({
+          content: '用户拒绝授权'
+        })
+        wx.hideLoading()
+      })
+
+    }
     onPullDownRefresh () {
       console.log('刷新1')
       this.refresh()
     }
     onShareAppMessage (res) {
-      console.log('转发', res)
-      return {
-        title: this.data.userInfo.nickName + '邀请你组队',
-        path: '/pages/foot/foot?id=' + this.data.myGroup.mygroup.id
+      if (res.from === 'menu') {
+        return {
+          title: '哇哈哈健康跑邀请你加入',
+          path: '/pages/foot/foot',
+          imageUrl: 'https://5b0988e595225.cdn.sohucs.com/images/20180428/ef486d72e6f4426b8afe0a6b53dd078a.jpg'
+        }
+      } else {
+        return {
+          title: this.data.userInfo.nickName + '邀请你组队',
+          path: '/pages/foot/foot?id=' + this.data.myGroup.mygroup.id,
+          imageUrl: 'https://5b0988e595225.cdn.sohucs.com/images/20180428/ef486d72e6f4426b8afe0a6b53dd078a.jpg'
+        }
       }
     }
     isTody (d) {
@@ -816,14 +855,12 @@
     // 加入小组
     joinGroup (id) {
       let that = this
-      debugger
       this.callCloud({
         name: 'joinGroup',
         data: {
           id: id
         },
         success: res => {
-          debugger
           let tip = ''
           if (res.errorMsg === 1) {
             tip = '你已加入该小组'
@@ -881,6 +918,9 @@
     }
     refresh () {
       let that = this
+      if (!this.data.isBindWx) {
+        return
+      }
       wx.getWeRunData({
         success (res) {
           let key = wx.getStorageSync('session_key')
@@ -915,15 +955,41 @@
         },
         complete () {
           that.getPageList()
+        },
+        fail (res) {
+          Toast.error({
+            content: '用户拒绝微运动授权'
+          })
         }
+      })
+    }
+    init () {
+      let that = this
+      let usr = this.data.userInfo
+      const pageInfo = wx.getLaunchOptionsSync()
+      const groupId = pageInfo.query.id
+      db.collection('user').where({
+        openId: usr.openId
+      }).get().then(res => {
+        if (res.data.length <= 0) {
+          that.setData({
+            isBindWx: false
+          })
+          this.$route('redirect', './login', {})
+          return
+        }
+        that.setData({
+          isBindWx: true
+        })
+        if (groupId) {
+          this.joinGroup(groupId)
+        }
+        that.refresh()
       })
     }
     onLoad (opt) {
       const that = this
-      const pageInfo = wx.getLaunchOptionsSync()
-      const groupId = pageInfo.query.id
       Toast.init('toast')
-      console.log('启动参数', pageInfo)
       wx.showShareMenu({
         withShareTicket: true,
         success: res => {
@@ -935,20 +1001,13 @@
         this.setData({
           userInfo: usr
         })
-        console.log('dfdfd', usr)
-        db.collection('user').where({
-          openId: usr.openId
-        }).get().then(res => {
-          if (res.data.length <= 0) {
-            this.$route('navigate', './login', {})
-            return
-          }
-          if (groupId) {
-            this.joinGroup(groupId)
-          }
-          that.refresh()
+        that.init()
+        console.log('用户信息', usr)
+      }, (res) => {
+        Toast.error({
+          content: '用户拒绝授权'
         })
-
+        wx.hideLoading()
       })
     }
   }
