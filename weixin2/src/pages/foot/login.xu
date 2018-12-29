@@ -77,6 +77,12 @@
               content: '账户和密码不正确'
             })
           } else {
+            if (res.data[0].openId !== '-1') {
+              Toast.error({
+                content: '此账户已绑定过微信号，其他问题请联系管理员'
+              })
+              return
+            }
             wx.cloud.callFunction({
               name: 'bindWx',
               data: {

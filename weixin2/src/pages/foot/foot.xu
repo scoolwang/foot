@@ -800,11 +800,15 @@
             item.sort = Number(idx) + 1
             map[item.openId] = item
           }
-          let todyGuanjun = {
-            openId: res.data[0].openId,
-            img: that.data.userMap[res.data[0].openId].img,
-            nick: that.data.userMap[res.data[0].openId].nick
+          let todyGuanjun = {}
+          if (that.data.userMap[res.data[0].openId]) {
+            todyGuanjun = {
+              openId: res.data[0].openId,
+              img: that.data.userMap[res.data[0].openId].img,
+              nick: that.data.userMap[res.data[0].openId].nick
+            }
           }
+
           that.setData({
             stepTodyList: res.data,
             stepTodyMap: map,
@@ -1013,9 +1017,12 @@
     onLoad (opt) {
       const that = this
       Toast.init('toast')
-      this.setData({
-        groupId: opt.id
-      })
+      if (opt && opt.id) {
+        this.setData({
+          groupId: opt.id
+        })
+      }
+
       wx.showShareMenu({
         withShareTicket: true,
         success: res => {
