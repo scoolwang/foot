@@ -1,0 +1,60 @@
+{
+	"description": "项目配置文件",
+	"packOptions": {
+		"ignore": []
+	},
+	"cloudfunctionRoot": "cloud-functions/",
+	"setting": {
+		"urlCheck": false,
+		"es6": true,
+		"postcss": true,
+		"minified": true,
+		"newFeature": true,
+		"nodeModules": true,
+		"autoAudits": false
+	},
+	"compileType": "miniprogram",
+	"miniprogramRoot": "dist/",
+	"libVersion": "2.2.5",
+	"appid": "wxe37b540617a53b3a",
+	"projectname": "%E5%BE%AE%E4%BF%A1%E8%BF%90%E5%8A%A8",
+	"debugOptions": {
+		"hidedInDevtools": []
+	},
+	"isGameTourist": false,
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"currentL": -1,
+			"list": []
+		},
+		"miniprogram": {
+			"current": 0,
+			"list": [
+				{
+					"id": 0,
+					"name": "test",
+					"pathName": "pages/foot/foot",
+					"query": "id=XCQ-YpT75u22ywCO",
+					"scene": "1044",
+					"shareInfo": {
+						"groupName": "测试模拟群1",
+						"shareName": "RbOosL9khtV3Ow0b8epzP1FogjSn2tqWTwH_6HHCtW0@cr4dev",
+						"shareKey": "fIPCEKOqRTXS9Tl74T1oZbw4pL9G5XmXm2CwMhkWhoR7v3kdrq5kWyPlAkCRv1TqbPN_jKnnxSiM1zAg3ZqT8w~~"
+					}
+				}
+			]
+		}
+	}
+}

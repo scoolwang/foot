@@ -590,9 +590,10 @@
         console.log('获取用户信息', usr)
         that.init()
       }, (res) => {
-        Toast.error({
-          content: '用户拒绝授权'
-        })
+        let str = JSON.stringify(res)
+        // Toast.error({
+        //   content: str
+        // })
         wx.hideLoading()
       })
 
@@ -1004,9 +1005,10 @@
         that.init()
         console.log('用户信息', usr)
       }, (res) => {
-        Toast.error({
-          content: '用户拒绝授权'
-        })
+        let str = JSON.stringify(res)
+        // Toast.error({
+        //   content: str
+        // })
         wx.hideLoading()
       })
     }

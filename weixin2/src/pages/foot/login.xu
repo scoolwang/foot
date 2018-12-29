@@ -121,6 +121,12 @@
     onLoad () {
       let that = this
       Toast.init('toast')
+      getUserInfo().then((usr) => {
+        this.setData({
+          userInfo: usr
+        })
+      }, (res) => {
+      })
     }
   }
 </script>

@@ -56,9 +56,6 @@ export default class extends wepy.app {
     wx.authorize({
       scope: 'scope.userInfo'
     })
-    wx.authorize({
-      scope: 'scope.werun'
-    })
   }
 }
 </script>
