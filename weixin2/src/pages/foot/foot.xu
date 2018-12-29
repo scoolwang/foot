@@ -73,34 +73,36 @@
   <swiper current="{{index}}" bindchange="swiperChange">
     <block>
       <swiper-item>
-        <scroll-view class="scroll-page">
-          <view class="slot"></view>
-          <view class="step-info self-step-info" wx:if="{{stepTodyMap[userInfo.openId].sort > 1}}">
-            <view class="avatar-box">
-              <image mode="aspectFill" class="avatar" src="{{userMap[userInfo.openId].img}}"></image>
+        <scroll-view class="scroll-page" scroll-y="true">
+          <view class="scroll-inner">
+            <view class="slot"></view>
+            <view class="step-info self-step-info" wx:if="{{stepTodyMap[userInfo.openId].sort > 1}}">
+              <view class="avatar-box">
+                <image mode="aspectFill" class="avatar" src="{{userMap[userInfo.openId].img}}"></image>
+              </view>
+              <view class="nick">
+                <view>{{userMap[userInfo.openId].nick}}</view>
+                <view class="seft-sort">第 {{stepTodyMap[userInfo.openId].sort}} 名</view>
+              </view>
+              <view class="step">{{stepTodyMap[userInfo.openId].step}}</view>
             </view>
-            <view class="nick">
-              <view>{{userMap[userInfo.openId].nick}}</view>
-              <view class="seft-sort">第 {{stepTodyMap[userInfo.openId].sort}} 名</view>
+            <view wx:for="{{stepTodyList}}" wx:key="index" class="step-info">
+              <view class="sort">
+                {{index +  1}}
+              </view>
+              <view class="avatar-box">
+                <image mode="aspectFill" class="avatar" src="{{userMap[item.openId].img}}"></image>
+              </view>
+              <view class="nick">{{userMap[item.openId].nick}}</view>
+              <view class="step">{{item.step}}</view>
             </view>
-            <view class="step">{{stepTodyMap[userInfo.openId].step}}</view>
-          </view>
-          <view wx:for="{{stepTodyList}}" wx:key="index" class="step-info">
-            <view class="sort">
-              {{index +  1}}
-            </view>
-            <view class="avatar-box">
-              <image mode="aspectFill" class="avatar" src="{{userMap[item.openId].img}}"></image>
-            </view>
-            <view class="nick">{{userMap[item.openId].nick}}</view>
-            <view class="step">{{item.step}}</view>
           </view>
         </scroll-view>
       </swiper-item>
     </block>
     <block>
       <swiper-item>
-        <scroll-view  scroll-y="{{true}}" class="scroll-page group-page">
+        <scroll-view  scroll-y="{{true}}" class="scroll-page group-page" scroll-y="true">
           <view class="scroll-inner">
             <view class="slot"></view>
             <view class="mygroup" wx:if="{{myGroup.hasGroup}}">
@@ -151,27 +153,29 @@
     </block>
     <block>
       <swiper-item>
-        <scroll-view class="scroll-page">
-          <view class="slot"></view>
-          <view class="step-info self-step-info" wx:if="{{stepHistoryObj[userInfo.openId].sort > 1}}">
-            <view class="avatar-box">
-              <image mode="aspectFill" class="avatar" src="{{userMap[userInfo.openId].img}}"></image>
+        <scroll-view class="scroll-page" scroll-y="true">
+          <view class="scroll-inner">
+            <view class="slot"></view>
+            <view class="step-info self-step-info" wx:if="{{stepHistoryObj[userInfo.openId].sort > 1}}">
+              <view class="avatar-box">
+                <image mode="aspectFill" class="avatar" src="{{userMap[userInfo.openId].img}}"></image>
+              </view>
+              <view class="nick">
+                <view>{{userMap[userInfo.openId].nick}}</view>
+                <view class="seft-sort">第 {{stepHistoryObj[userInfo.openId].sort}} 名</view>
+              </view>
+              <view class="step">{{stepHistoryObj[userInfo.openId].step}}</view>
             </view>
-            <view class="nick">
-              <view>{{userMap[userInfo.openId].nick}}</view>
-              <view class="seft-sort">第 {{stepHistoryObj[userInfo.openId].sort}} 名</view>
+            <view wx:for="{{stepHistoryList}}" wx:key="index" class="step-info">
+              <view class="sort">
+                {{index +  1}}
+              </view>
+              <view class="avatar-box">
+                <image mode="aspectFill" class="avatar" src="{{userMap[item.openId].img}}"></image>
+              </view>
+              <view class="nick">{{userMap[item.openId].nick}}</view>
+              <view class="step">{{item.step}}</view>
             </view>
-            <view class="step">{{stepHistoryObj[userInfo.openId].step}}</view>
-          </view>
-          <view wx:for="{{stepHistoryList}}" wx:key="index" class="step-info">
-            <view class="sort">
-              {{index +  1}}
-            </view>
-            <view class="avatar-box">
-              <image mode="aspectFill" class="avatar" src="{{userMap[item.openId].img}}"></image>
-            </view>
-            <view class="nick">{{userMap[item.openId].nick}}</view>
-            <view class="step">{{item.step}}</view>
           </view>
         </scroll-view>
       </swiper-item>
@@ -620,9 +624,9 @@
     }
     isTody (d) {
      var td = new Date()
-     td = new Date(td.getFullYear(),td.getMonth(),td.getDate(), 0, 0, 0).getTime()
+     td = new Date(td.getFullYear(), td.getMonth(), td.getDate(), 0, 0, 0).getTime()
      var od = new Date(d)
-     od = new Date(od.getFullYear(),od.getMonth(),od.getDate(), 0, 0 , 0).getTime()
+     od = new Date(od.getFullYear(),od.getMonth(),od.getDate(), 0, 0, 0).getTime()
      var xc = od - td
      return xc
     }
@@ -961,6 +965,7 @@
               that.setData({
                 list: stepList
               })
+              that.getPageList()
               // wx.showModal({
               //   content: JSON.stringify(stepList)
               // })
@@ -968,10 +973,8 @@
             }
           })
         },
-        complete () {
-          that.getPageList()
-        },
         fail (res) {
+          that.getPageList()
           Toast.error({
             content: '用户拒绝微运动授权'
           })
@@ -992,7 +995,8 @@
           that.setData({
             isBindWx: false
           })
-          this.$route('redirect', './login', {})
+          that.addUser()
+          // this.$route('redirect', './login', {})
           return
         }
         that.updateUser()
@@ -1011,6 +1015,21 @@
         data: {
           nick: this.data.userInfo.nickName,
           img: this.data.userInfo.avatarUrl
+        }
+      })
+    }
+    addUser () {
+      wx.cloud.callFunction({
+        name: 'addUser',
+        data: {
+          img: this.data.userInfo.avatarUrl,
+          nick: this.data.userInfo.nickName
+        },
+        success: res => {
+          this.setData({
+            isBindWx: true
+          })
+          this.init()
         }
       })
     }

@@ -20,6 +20,7 @@ exports.main = async (event, context) => {
         })
       })
     }
+    console.log('创建小组: ' + OPENID)
     return await col.add({
       data: {
         creator: OPENID,

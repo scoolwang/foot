@@ -17,15 +17,6 @@ exports.main = async (event, context) => {
     group = group.data
     allGroup = allGroup.data
     console.log(allGroup)
-    for (let item of allGroup) {
-      console.log(item)
-      let itemIds = item.openIds
-      if (itemIds.indexOf(OPENID) > -1 && itemIds.length === 1) {
-        await db.collection('group').where({
-          _id: item._id
-        }).remove()
-      }
-    }
     if (group.length <= 0) {
       return await new Promise((resolve, reject) => {
         resolve({
@@ -50,6 +41,17 @@ exports.main = async (event, context) => {
           errorMsg: '小组已满员'
         })
       })
+    }
+    for (let item of allGroup) {
+      console.log(item)
+      let itemIds = item.openIds
+      if (itemIds.indexOf(OPENID) > -1 && itemIds.length === 1) {
+        console.log('加入小组id' + event.id)
+        console.log('删除小组id' + item._id)
+        await db.collection('group').where({
+          _id: item._id
+        }).remove()
+      }
     }
     openIds.push(OPENID)
     return await col.where({
