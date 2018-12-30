@@ -610,7 +610,7 @@
     onShareAppMessage (res) {
       if (res.from === 'menu') {
         return {
-          title: '哇哈哈健康跑邀请你加入',
+          title: '娃哈哈21天健步行比赛',
           path: '/pages/foot/foot',
           imageUrl: 'http://images.kaishiba.com/whhfoot.jpeg'
         }
